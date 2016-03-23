@@ -1,12 +1,16 @@
 development:
-  sessions:
+  clients:
     default:
       database: enterprise_position_level_dev
       hosts:
         - localhost:27017
 test:
-  sessions:
+  clients:
     default:
       database: enterprise_position_level_test
       hosts:
         - localhost:27017
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
