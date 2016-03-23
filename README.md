@@ -1,36 +1,50 @@
 # EnterprisePositionLevel
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/enterprise_position_level`. To experiment with that code, run `bin/console` for an interactive prompt.
+岗位和级别
 
-TODO: Delete this and the text above, and describe your gem
+## 引入方式
 
-## Installation
-
-Add this line to your application's Gemfile:
+增加到 Gemfile
 
 ```ruby
-gem 'enterprise_position_level'
+gem 'enterprise_position_level',
+  github: "https://github.com/mindpin/enterprise_position_level.git",
+  branch: "master"
 ```
 
-And then execute:
 
-    $ bundle
+## 使用说明
 
-Or install it yourself as:
+### 创建岗位
+```ruby
+post = EnterprisePositionLevel::Post.create(name: "岗位1", number: "1")
+```
 
-    $ gem install enterprise_position_level
+### 设置岗位
+```ruby
+user = User.find user_id
+post = EnterprisePositionLevel::Post.find post_id
 
-## Usage
+# 给用户增加岗位
+user.enterprise_position_level.enterprise_posts << post
 
-TODO: Write usage instructions here
+# 给用户去掉岗位
+user.enterprise_position_level.enterprise_posts.destroy(post)
+```
 
-## Development
+### 创建级别
+```ruby
+level = EnterprisePositionLevel::Level.create(name: "级别1", number: "1")
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+### 设置级别
+```ruby
+user = User.find user_id
+level = EnterprisePositionLevel::Level.find level_id
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# 给用户设置级别
+user.enterprise_position_level.set_enterprise_level level
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/enterprise_position_level.
-
+# 给用户去掉级别
+user.enterprise_position_level.set_enterprise_level nil
+```
