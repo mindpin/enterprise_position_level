@@ -33,10 +33,10 @@ group :test do
   gem 'database_cleaner', '~> 1.5.1'
   gem "factory_girl_rails"
   gem 'capybara'
-  gem 'mongoid-rspec', '3.0.0'
+  gem 'mongoid-rspec', '~> 2.1.0'
 end
 
-gem 'mongoid', '~> 5.1.1'
+gem 'mongoid', '~> 4.0.0'
 gem 'haml'
 
 gem 'play_auth', :github => 'mindpin/play_auth',
