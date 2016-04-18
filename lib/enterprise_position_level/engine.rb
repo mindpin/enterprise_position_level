@@ -9,10 +9,7 @@ module EnterprisePositionLevel
       end
 
       EnterprisePositionLevel.get_user_class.class_eval do
-        has_one :user_position_level, class_name: "EnterprisePositionLevel::UserPositionLevel"
-        def enterprise_position_level
-          user_position_level || create_user_position_level
-        end
+        has_and_belongs_to_many :user_position_levels, class_name: "EnterprisePositionLevel::UserPositionLevel", inverse_of: :users
       end
 
     end

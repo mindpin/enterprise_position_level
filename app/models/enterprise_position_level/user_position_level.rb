@@ -3,14 +3,13 @@ module EnterprisePositionLevel
     include Mongoid::Document
     include Mongoid::Timestamps
 
-    belongs_to :user, class_name: EnterprisePositionLevel.get_user_class_name
+    #field :name,   type: String
+    # 有多个级别
+    field :number, type: Integer, default: 2
 
-    has_and_belongs_to_many :enterprise_posts, class_name: "EnterprisePositionLevel::Post", inverse_of: nil
+    has_and_belongs_to_many :users, class_name: EnterprisePositionLevel.get_user_class_name, inverse_of: :user_position_levels
+
+    belongs_to :enterprise_post, class_name: "EnterprisePositionLevel::Post", inverse_of: nil
     belongs_to :enterprise_level, class_name: "EnterprisePositionLevel::Level"
-
-    def set_enterprise_level level
-      self.enterprise_level = level
-      self.save
-    end
   end
 end

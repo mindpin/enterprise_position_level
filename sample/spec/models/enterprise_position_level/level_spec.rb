@@ -5,22 +5,36 @@ RSpec.describe EnterprisePositionLevel::Level, type: :model do
     is_expected.to validate_presence_of(:name)
     is_expected.to validate_presence_of(:number)
     is_expected.to validate_uniqueness_of(:name)
-    is_expected.to validate_uniqueness_of(:number)
   }
 
-  describe "一个用户可以有一个级别" do
+  it "属性" do
+    level1 = EnterprisePositionLevel::Level.create(name: "级别1")
+    expect(level1.respond_to?(:name)).to be true
+    expect(level1.respond_to?(:number)).to be true
+
+    # 默认
+    expect(level1.number).to eq 2
+  end
+
+  it "关系" do
+    level1 = EnterprisePositionLevel::Level.create(name: "级别1", number: "1")
+    expect(level1.respond_to?(:enterprise_posts)).to be true
+    expect(level1.respond_to?(:user_position_levels)).to be true
+  end
+
+  describe "新建后，自动创建对应职级" do
     it{
-      user = create(:user)
-      level1 = EnterprisePositionLevel::Level.create(name: "级别1", number: "1")
-      level2 = EnterprisePositionLevel::Level.create(name: "级别2", number: "2")
+      @post = EnterprisePositionLevel::Post.create name: "技术岗位"
 
-      user.enterprise_position_level.set_enterprise_level level1
-      user = User.find user.id.to_s
-      expect(user.enterprise_position_level.enterprise_level).to eq(level1)
+      @level1_number = 1
+      level1 = EnterprisePositionLevel::Level.create(name: "技术", number: @level1_number, enterprise_posts: [@post])
+      expect(level1.user_position_levels).to be_any
+      expect(level1.user_position_levels.length).to eq @level1_number
 
-      user.enterprise_position_level.set_enterprise_level level2
-      user = User.find user.id.to_s
-      expect(user.enterprise_position_level.enterprise_level).to eq(level2)
+      @level2_number = 2
+      level2 = EnterprisePositionLevel::Level.create(name: "设计", number: @level2_number, enterprise_posts: [@post])
+      expect(level2.user_position_levels).to be_any
+      expect(level2.user_position_levels.length).to eq @level2_number
     }
   end
 
