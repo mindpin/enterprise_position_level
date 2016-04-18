@@ -23,5 +23,27 @@ module EnterprisePositionLevel
         end
       end
     end
+
+    after_update :update_user_position_level
+    def update_user_position_level
+      # TODO 职位变化也需要处理
+      # 级别变化
+      if number_change
+        old_number = number_change[0]
+        new_number = number_change[1]
+        if new_number > old_number
+          # 新建
+          ((old_number + 1)..new_number).each do |level|
+            enterprise_posts.each do |post|
+              user_position_levels.create number: level, enterprise_post: post #, name: "#{name}Lv#{level+1}", 
+            end
+          end
+        else
+          # 删除
+          range = ((new_number + 1)..old_number).to_a
+          user_position_levels.where(:number.in => range).destroy_all
+        end
+      end
+    end
   end
 end

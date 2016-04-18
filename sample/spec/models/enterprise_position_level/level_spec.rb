@@ -22,20 +22,37 @@ RSpec.describe EnterprisePositionLevel::Level, type: :model do
     expect(level1.respond_to?(:user_position_levels)).to be true
   end
 
-  describe "新建后，自动创建对应职级" do
-    it{
-      @post = EnterprisePositionLevel::Post.create name: "技术岗位"
+  it "新建后，自动创建对应职级" do
+    @post = EnterprisePositionLevel::Post.create name: "技术岗位"
 
-      @level1_number = 1
-      level1 = EnterprisePositionLevel::Level.create(name: "技术", number: @level1_number, enterprise_posts: [@post])
-      expect(level1.user_position_levels).to be_any
-      expect(level1.user_position_levels.length).to eq @level1_number
+    @level1_number = 1
+    level1 = EnterprisePositionLevel::Level.create(name: "技术", number: @level1_number, enterprise_posts: [@post])
+    expect(level1.user_position_levels).to be_any
+    expect(level1.user_position_levels.length).to eq @level1_number
 
-      @level2_number = 2
-      level2 = EnterprisePositionLevel::Level.create(name: "设计", number: @level2_number, enterprise_posts: [@post])
-      expect(level2.user_position_levels).to be_any
-      expect(level2.user_position_levels.length).to eq @level2_number
-    }
+    @level2_number = 2
+    level2 = EnterprisePositionLevel::Level.create(name: "设计", number: @level2_number, enterprise_posts: [@post])
+    expect(level2.user_position_levels).to be_any
+    expect(level2.user_position_levels.length).to eq @level2_number
   end
 
+  describe "更新后, 对应职级更新" do
+    before do
+      @origin_number = 3
+      @post = EnterprisePositionLevel::Post.create name: "技术岗位"
+      @level = EnterprisePositionLevel::Level.create(name: "技术", number: @origin_number, enterprise_posts: [@post])
+    end
+
+    it "级别增加" do
+      @level_to = 8
+      @level.update_attribute :number, @level_to
+      expect(@level.user_position_levels.length).to eq @level_to
+    end
+
+    it "级别降低" do
+      @level_to = 1
+      @level.update_attribute :number, @level_to
+      expect(@level.user_position_levels.length).to eq @level_to
+    end
+  end
 end
