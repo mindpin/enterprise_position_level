@@ -26,7 +26,16 @@ module EnterprisePositionLevel
 
     after_update :update_user_position_level
     def update_user_position_level
-      # TODO 职位变化也需要处理
+      # FIXME 增加职位同时改变职级需要处理
+
+      remove_post_ids = []
+      add_post_ids = []
+      if enterprise_post_ids_change
+        remove_post_ids = enterprise_post_ids_change[0] - enterprise_post_ids_change[1]
+        add_post_ids = enterprise_post_ids_change[0] - enterprise_post_ids_change[1]
+        user_position_levels.where(:enterprise_post_id.in => remove_post_ids).destroy_all if remove_post_ids.any?
+      end
+
       # 级别变化
       if number_change
         old_number = number_change[0]
@@ -42,6 +51,13 @@ module EnterprisePositionLevel
           # 删除
           range = ((new_number + 1)..old_number).to_a
           user_position_levels.where(:number.in => range).destroy_all
+        end
+      else
+        add_post_ids.each do |post_id|
+          range.times do |i|
+            level = i + 1
+            user_position_levels.create number: level, enterprise_post_id: post_id
+          end
         end
       end
     end
