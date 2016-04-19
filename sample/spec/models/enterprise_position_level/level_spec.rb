@@ -14,7 +14,7 @@ RSpec.describe EnterprisePositionLevel::Level, type: :model do
 
   it "关系" do
     level1 = create(:enterprise_level)
-    expect(level1.respond_to?(:groups)).to be true
+    expect(level1.respond_to?(:posts)).to be true
   end
 
 end
