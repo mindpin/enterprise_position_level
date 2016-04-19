@@ -1,9 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe "举例" do
-    it{
-      expect(create(:user).name).to match(/user.*/)
-    }
+  it "关系" do
+    @user = create(:user)
+    expect(@user.respond_to?(:user_position_level)).to be true
   end
 end
